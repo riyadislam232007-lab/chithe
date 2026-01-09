@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>চিঠি - একটি সামাজিক নেটওয়ার্ক</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            line-height: 1.6;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: #ffffff;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: #1B74E4;
+            font-size: 40px;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1B74E4;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span {
+            color: #FF7F32;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f0f2f5;
+            border-radius: 50px;
+            padding: 10px 15px;
+            width: 300px;
+        }
+        
+        .search-bar i {
+            color: #65676b;
+            margin-right: 8px;
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 15px;
+        }
+        
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .nav-icons a {
+            color: #65676b;
+            font-size: 22px;
+            position: relative;
+            padding: 8px;
+            border-radius: 10px;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-icons a:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #1B74E4;
+        }
+        
+        /* Main content layout */
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 5%;
+            gap: 20px;
+        }
+        
+        /* Left sidebar */
+        .left-sidebar {
+            flex: 0 0 280px;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-menu {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px 0;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #050505;
+            text-decoration: none;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .sidebar-item i {
+            font-size: 24px;
+            width: 40px;
+            color: #1B74E4;
+        }
+        
+        .sidebar-item.active {
+            background-color: #e7f3ff;
+            border-left: 4px solid #1B74E4;
+            font-weight: 600;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #e4e6eb;
+            margin: 10px 0;
+        }
+        
+        /* Main feed */
+        .main-feed {
+            flex: 1;
+            max-width: 680px;
+        }
+        
+        .create-post {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .post-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .post-input img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .post-input textarea {
+            flex: 1;
+            border: none;
+            background-color: #f0f2f5;
+            border-radius: 20px;
+            padding: 15px;
+            resize: none;
+            font-size: 17px;
+            outline: none;
+        }
+        
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #e4e6eb;
+        }
+        
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .post-action:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .post-action i {
+            font-size: 24px;
+        }
+        
+        .post-action:nth-child(1) i { color: #F5533D; }
+        .post-action:nth-child(2) i { color: #45BD62; }
+        .post-action:nth-child(3) i { color: #1B74E4; }
+        
+        /* Posts */
+        .post {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .post-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            font-size: 17px;
+            margin-bottom: 3px;
+        }
+        
+        .author-info p {
+            font-size: 13px;
+            color: #65676b;
+        }
+        
+        .post-content {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .post-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e4e6eb;
+            color: #65676b;
+            font-size: 15px;
+        }
+        
+        .post-actions-row {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 10px;
+        }
+        
+        .post-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #65676b;
+            font-weight: 600;
+        }
+        
+        .post-action-btn:hover {
+            background-color: #f0f2f5;
+        }
+        
+        /* Right sidebar */
+        .right-sidebar {
+            flex: 0 0 320px;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        
+        .contacts-section {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #050505;
+        }
+        
+        .contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .contact:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .contact img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .contact-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #31a24c;
+            margin-left: auto;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #ffffff;
+            padding: 20px 5%;
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #e4e6eb;
+            color: #65676b;
+            font-size: 14px;
+        }
+        
+        .footer-text {
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #e4e6eb;
+            font-style: italic;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .right-sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .left-sidebar {
+                display: none;
+            }
+            
+            .search-bar {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 700px) {
+            .header-container {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                order: 3;
+                width: 100%;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+        }
+        
+        /* Bengali font style */
+        .bengali-text {
+            font-family: 'SolaimanLipi', 'Siyam Rupali', 'Segoe UI', Tahoma, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-envelope-open-text"></i>
+                <div class="logo-text">চি<span>ঠি</span></div>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="চিঠিতে অনুসন্ধান করুন...">
+            </div>
+            
+            <div class="nav-icons">
+                <a href="#"><i class="fas fa-home"></i></a>
+                <a href="#"><i class="fas fa-users"></i></a>
+                <a href="#"><i class="fas fa-comment-dots"></i></a>
+                <a href="#"><i class="fas fa-bell"></i></a>
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="sidebar-item active">
+                    <i class="fas fa-home"></i>
+                    <span class="bengali-text">হোম</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-user-friends"></i>
+                    <span class="bengali-text">বন্ধুবান্ধব</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-play-circle"></i>
+                    <span class="bengali-text">ভিডিও</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-store"></i>
+                    <span class="bengali-text">মার্কেটপ্লেস</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-users"></i>
+                    <span class="bengali-text">গ্রুপ</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="bengali-text">ইভেন্ট</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-history"></i>
+                    <span class="bengali-text">স্মৃতি</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-bookmark"></i>
+                    <span class="bengali-text">সংরক্ষিত</span>
+                </a>
+                
+                <div class="divider"></div>
+                
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-cog"></i>
+                    <span class="bengali-text">সেটিংস</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="bengali-text">সাহায্য</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Feed -->
+        <div class="main-feed">
+            <!-- Create Post -->
+            <div class="create-post">
+                <div class="post-input">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile">
+                    <textarea placeholder="রিয়াদ, আজকে কী ভাবছেন?"></textarea>
+                </div>
+                
+                <div class="post-actions">
+                    <div class="post-action">
+                        <i class="fas fa-video"></i>
+                        <span class="bengali-text">লাইভ ভিডিও</span>
+                    </div>
+                    <div class="post-action">
+                        <i class="fas fa-images"></i>
+                        <span class="bengali-text">ছবি/ভিডিও</span>
+                    </div>
+                    <div class="post-action">
+                        <i class="fas fa-smile"></i>
+                        <span class="bengali-text">অনুভূতি</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Post 1 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-author">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Author">
+                        <div class="author-info">
+                            <h4 class="bengali-text">ফারহানা আহমেদ</h4>
+                            <p class="bengali-text">২ ঘন্টা আগে · <i class="fas fa-globe-asia"></i></p>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                
+                <div class="post-content bengali-text">
+                    <p>আজ সকালে শহরের নতুন পার্কে গিয়েছিলাম। প্রকৃতির সৌন্দর্য দেখে মনটা খুবই প্রফুল্ল হয়েছে। সবাইকে বলবো, মাঝে মাঝে প্রকৃতির কাছাকাছি যাওয়া উচিত, এতে মন ভালো থাকে।</p>
+                </div>
+                
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80" alt="Park" class="post-image">
+                
+                <div class="post-stats">
+                    <div>
+                        <i class="fas fa-thumbs-up" style="color: #1B74E4;"></i>
+                        <span class="bengali-text">আহমেদ, সুমন এবং আরও ১২৫ জন</span>
+                    </div>
+                    <div class="bengali-text">৪৮টি মন্তব্য · ৭টি শেয়ার</div>
+                </div>
+                
+                <div class="post-actions-row">
+                    <div class="post-action-btn">
+                        <i class="far fa-thumbs-up"></i>
+                        <span class="bengali-text">লাইক</span>
+                    </div>
+                    <div class="post-action-btn">
+                        <i class="far fa-comment"></i>
+                        <span class="bengali-text">মন্তব্য</span>
+                    </div>
+                    <div class="post-action-btn">
+                        <i class="fas fa-share"></i>
+                        <span class="bengali-text">শেয়ার</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Post 2 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-author">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Author">
+                        <div class="author-info">
+                            <h4 class="bengali-text">আরিফুল ইসলাম</h4>
+                            <p class="bengali-text">গতকাল · <i class="fas fa-user-friends"></i></p>
+                        </div>
+                    </div>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                
+                <div class="post-content bengali-text">
+                    <p>আমার নতুন ব্যবসা প্রতিষ্ঠান "গ্রিন টেক সলিউশনস" এর উদ্বোধন হলো আজ। পরিবেশবান্ধব প্রযুক্তি নিয়ে কাজ করবো আমরা। সবাইকে আমন্ত্রণ জানাই আমাদের সাথে যুক্ত হতে।</p>
+                </div>
+                
+                <div class="post-stats">
+                    <div>
+                        <i class="fas fa-thumbs-up" style="color: #1B74E4;"></i>
+                        <span class="bengali-text">সাকিব, রানা এবং আরও ২১০ জন</span>
+                    </div>
+                    <div class="bengali-text">৮৯টি মন্তব্য · ২৩টি শেয়ার</div>
+                </div>
+                
+                <div class="post-actions-row">
+                    <div class="post-action-btn">
+                        <i class="far fa-thumbs-up"></i>
+                        <span class="bengali-text">লাইক</span>
+                    </div>
+                    <div class="post-action-btn">
+                        <i class="far fa-comment"></i>
+                        <span class="bengali-text">মন্তব্য</span>
+                    </div>
+                    <div class="post-action-btn">
+                        <i class="fas fa-share"></i>
+                        <span class="bengali-text">শেয়ার</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="contacts-section">
+                <h3 class="section-title bengali-text">অনলাইন বন্ধু</h3>
+                
+                <div class="contact">
+                    <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Friend">
+                    <div>
+                        <h4 class="bengali-text">তাসনিমা জাহান</h4>
+                        <p class="bengali-text" style="font-size: 13px; color: #65676b;">এখন সক্রিয়</p>
+                    </div>
+                    <div class="contact-status"></div>
+                </div>
+                
+                <div class="contact">
+                    <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="Friend">
+                    <div>
+                        <h4 class="bengali-text">রফিকুল ইসলাম</h4>
+                        <p class="bengali-text" style="font-size: 13px; color: #65676b;">১০ মিনিট আগে</p>
+                    </div>
+                    <div class="contact-status"></div>
+                </div>
+                
+                <div class="contact">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Friend">
+                    <div>
+                        <h4 class="bengali-text">নুসরাত জাহান</h4>
+                        <p class="bengali-text" style="font-size: 13px; color: #65676b;">এখন সক্রিয়</p>
+                    </div>
+                    <div class="contact-status"></div>
+                </div>
+                
+                <div class="contact">
+                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Friend">
+                    <div>
+                        <h4 class="bengali-text">শাহরিয়ার আহমেদ</h4>
+                        <p class="bengali-text" style="font-size: 13px; color: #65676b;">১ ঘন্টা আগে</p>
+                    </div>
+                    <div class="contact-status"></div>
+                </div>
+                
+                <div class="contact">
+                    <img src="https://randomuser.me/api/portraits/women/25.jpg" alt="Friend">
+                    <div>
+                        <h4 class="bengali-text">মেহজাবিন চৌধুরী</h4>
+                        <p class="bengali-text" style="font-size: 13px; color: #65676b;">এখন সক্রিয়</p>
+                    </div>
+                    <div class="contact-status"></div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;" class="contacts-section">
+                <h3 class="section-title bengali-text">গত সংলাপ</h3>
+                
+                <div class="contact">
+                    <img src="https://randomuser.me/api/portraits/men/18.jpg" alt="Friend">
+                    <div>
+                        <h4 class="bengali-text">ইমরান হোসেন</h4>
+                        <p class="bengali-text" style="font-size: 13px; color: #65676b;">শুভ জন্মদিন ভাই!</p>
+                    </div>
+                </div>
+                
+                <div class="contact">
+                    <img src="https://randomuser.me/api/portraits/women/52.jpg" alt="Friend">
+                    <div>
+                        <h4 class="bengali-text">নাজিয়া খান</h4>
+                        <p class="bengali-text" style="font-size: 13px; color: #65676b;">আগামীকাল দেখা হবে...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text bengali-text">
+            <p>চিঠি - একটি সামাজিক নেটওয়ার্ক যেখানে আপনি আপনার প্রিয়জনদের সাথে যুক্ত থাকতে পারেন</p>
+            <p style="margin-top: 5px;">Created by Riyad Islam</p>
+        </div>
+        
+        <div style="margin-top: 20px; color: #65676b; font-size: 12px;">
+            <p class="bengali-text">© ২০২৩ চিঠি. সমস্ত অধিকার সংরক্ষিত।</p>
+            <p style="margin-top: 5px;" class="bengali-text">গোপনীয়তা · শর্তাবলী · কুকি পছন্দ · বিজ্ঞাপন · অ্যাপ · সহায়তা</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Simple JavaScript for interaction
+        document.addEventListener('DOMContentLoaded', function() {
+            // Like button functionality
+            const likeButtons = document.querySelectorAll('.post-action-btn');
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    const text = this.querySelector('span');
+                    
+                    if (icon.classList.contains('fa-thumbs-up')) {
+                        if (icon.classList.contains('far')) {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+                            this.style.color = '#1B74E4';
+                            icon.style.color = '#1B74E4';
+                            text.textContent = 'লাইক করা হয়েছে';
+                        } else {
+                            icon.classList.remove('fas');
+                            icon.classList.add('far');
+                            this.style.color = '#65676b';
+                            icon.style.color = '';
+                            text.textContent = 'লাইক';
+                        }
+                    }
+                });
+            });
+            
+            // Post submission
+            const postTextarea = document.querySelector('.post-input textarea');
+            const postActions = document.querySelectorAll('.post-action');
+            
+            postActions.forEach(action => {
+                action.addEventListener('click', function() {
+                    if (postTextarea.value.trim() !== '') {
+                        alert('পোস্ট তৈরি করা হয়েছে!');
+                        postTextarea.value = '';
+                    } else {
+                        alert('দয়া করে কিছু লিখুন');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
